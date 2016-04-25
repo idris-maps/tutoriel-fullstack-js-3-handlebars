@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Tutoriel-fullstack-js-3-handlebars : Tutoriel Fullstack JavaScript - Chapitre 3 - Handlebars">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Tutoriel-fullstack-js-3-handlebars</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/idris-maps/tutoriel-fullstack-js-3-handlebars">View on GitHub</a>
+
+          <h1 id="project_title">Tutoriel-fullstack-js-3-handlebars</h1>
+          <h2 id="project_tagline">Tutoriel Fullstack JavaScript - Chapitre 3 - Handlebars</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/idris-maps/tutoriel-fullstack-js-3-handlebars/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/idris-maps/tutoriel-fullstack-js-3-handlebars/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="handlebars" class="anchor" href="#handlebars" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Handlebars</h1>
+
+<p>Dans le chapitre précedent, la vue de notre application était une chaîne de caractères HTML créée à l'intérieur du script <code>vue-a-faire.js</code>. Le problème avec cette approche est un mélange de HTML et de javacript qui peut devenir illisible pour des applications plus complexes. Nous allons maintenant séparer les deux à l'aide d'une libraire "patron" ("templating engine" en anglais). Pour cet exercice j'ai choisi <a href="http://handlebarsjs.com/">handlebars</a>.</p>
+
+<h2>
+<a id="mise-en-place" class="anchor" href="#mise-en-place" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Mise en place</h2>
+
+<p>Nous allons réutiliser le modèle et les controleurs du chapitre précédent et ne changer que la vue. </p>
+
+<p>Créez un nouveau dossier <code>3.handlebars</code>, copiez le contenu du dossier <code>2.vanilla</code> du <a href="link_to_do">chapitre 2</a> et ouvrez le fichier <code>package.json</code> pour en modifier le nom.</p>
+
+<pre><code>{
+  "name": "handlebars", // &lt;-- modifié
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",
+    "build": "browserify main.js -o public/script.js | minify public/script.js -o public/script.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
+</code></pre>
+
+<p>Dans <code>public/index.html</code> changer le titre.</p>
+
+<pre><code>&lt;title&gt;Handlebars&lt;/title&gt;
+</code></pre>
+
+<p>Nous allons aussi télécharger <code>handlebars</code> ainsi que le module <code>browserify-handlebars</code> avec NPM. Ouvrez le terminal dans le dossier du projet.</p>
+
+<pre><code>$ cd ~/Desktop/3.handlebars
+$ npm install handlebars browserify-handlebars --save
+</code></pre>
+
+<p>Dans le dossier <code>lib</code> créez un nouveau dossier <code>vue-a-faire</code> où nous allons ajouter la nouvelle vue.</p>
+
+<h2>
+<a id="vue-handlebars" class="anchor" href="#vue-handlebars" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Vue handlebars</h2>
+
+<p>Dans <code>lib/vue-a-faire</code>, créez un fichier <code>liste.handlebars</code>.</p>
+
+<pre><code>{{#each data}}
+&lt;div
+ {{#if fait}} class="liste-element fait"
+ {{else}} class="liste-element a-faire"
+ {{/if}}
+ &gt;
+ &lt;div class="liste-element-info"&gt;
+  &lt;div class="liste-element-texte"&gt;
+   &lt;p&gt;{{text}}&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="liste-element-modif"&gt;
+   &lt;span class="glyphicon glyphicon-pencil"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class="liste-element-statut"&gt;
+   &lt;span
+    {{#if fait}} class="glyphicon glyphicon-remove"
+    {{else}} class="glyphicon glyphicon-ok"
+    {{/if}}
+   &gt;&lt;/span&gt;
+  &lt;/div&gt;
+ &lt;/div&gt;
+
+ {{#if maj}}
+ &lt;div class="liste-element-maj"&gt;
+  &lt;div class="liste-element-maj-input"&gt;
+   &lt;input class="form-control" id="liste-element-maj-input" type="text"&gt;
+  &lt;/div&gt;
+  &lt;div class="liste-element-maj-bouton"&gt;
+   &lt;button class="btn btn-primary" id="liste-element-maj-bouton"&gt;OK&lt;/button&gt;
+  &lt;/div&gt;
+ &lt;/div&gt;
+ {{/if}}
+
+&lt;/div&gt;
+{{/each}}
+</code></pre>
+
+<p>Nous avons ici repris le HTML d'un élément de la liste de choses à faire qui, comme nous l'avons vu dans le chapitre précédent, sera représenté différemment selon qu'il soit marqué comme <code>fait</code> ou non et selon qu'il soit en cours de modification ou pas.</p>
+
+<h3>
+<a id="sémantique-handlebars" class="anchor" href="#s%C3%A9mantique-handlebars" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sémantique handlebars</h3>
+
+<p>Les balises handlebars sont représentées par les caractères <code>{{</code> et <code>}}</code>.</p>
+
+<h4>
+<a id="boucle" class="anchor" href="#boucle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Boucle</h4>
+
+<pre><code>{{#each data}}
+
+ // HTML de chaque objet du dictionnaire "data"
+
+{{/each}}
+</code></pre>
+
+<p>Pour chaque objet du dictionnaire <code>data</code>, handlebars va créer le HTML entre les balises <code>each</code>.</p>
+
+<h4>
+<a id="condition" class="anchor" href="#condition" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Condition</h4>
+
+<p>Dans handlebars une condition est exprimée par la balise <code>{{#if}}</code>.</p>
+
+<p>Dans notre example:</p>
+
+<pre><code>&lt;div
+ {{#if fait}} class="liste-element fait"
+ {{else}} class="liste-element a-faire"
+ {{/if}}
+ &gt;
+</code></pre>
+
+<p>Si l'objet du dictionnaire <code>data</code> est <code>fait</code> la <code>&lt;div&gt;</code> aura les classes <code>liste-element</code> et <code>fait</code>. Sinon (<code>{{else}}</code>), elle aura les classes <code>liste-element</code> et <code>a-faire</code>.</p>
+
+<p>De la même manière le <code>&lt;span&gt;</code> dans <code>&lt;div class="liste-element-statut"&gt;</code> aura différentes classes dépendant de ce que l'objet soit <code>fait</code> ou non.</p>
+
+<p>Le conditionnel peut aussi être utilisé pour montrer ou non un bloque de code HTML. Dans notre exemple, la partie <code>&lt;div class="liste-element-maj"&gt;</code> est montrée si l'objet est en cours de modification.</p>
+
+<h4>
+<a id="insérer-une-chaîne-caractère-du-modèle" class="anchor" href="#ins%C3%A9rer-une-cha%C3%AEne-caract%C3%A8re-du-mod%C3%A8le" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Insérer une chaîne caractère du modèle</h4>
+
+<p>Nous insérons le <code>text</code> de l'objet en utilisant les balises handlebars. Dans notre exemple:</p>
+
+<pre><code>&lt;p&gt;{{text}}&lt;/p&gt;
+</code></pre>
+
+<h3>
+<a id="intégrer-la-vue-dans-notre-application" class="anchor" href="#int%C3%A9grer-la-vue-dans-notre-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Intégrer la vue dans notre application</h3>
+
+<p>Ouvrez le fichier <code>lib/vue-a-faire.js</code>. Vous pouvez effacer la fonction <code>creerHtmlElement()</code> puisque le patron handlebars se chargera de cette partie. Nous allons garder la fonction <code>creerHtml()</code> mais la réécrire, effacez son contenu.</p>
+
+<p>Le fichier ressemble maintenant à ça:</p>
+
+<pre><code>module.exports = function(modele) {
+ document.getElementById('liste').innerHTML = creerHtml(modele)
+}
+
+function creerHtml(modele) {
+
+}
+</code></pre>
+
+<p>En haut de page, créez un lien vers le patron <code>liste.handlebars</code>.</p>
+
+<pre><code>var liste = require('./vue-a-faire/liste.handlebars')
+</code></pre>
+
+<p>À l'intérieur de la fonction <code>creerHtml()</code> nous allons passer le dictionnaire <code>data</code> du modèle à la vue <code>liste</code> et renvoyer le HTML ainsi créé.</p>
+
+<pre><code>var liste = require('./vue/liste.handlebars')
+
+module.exports = function(modele) {
+ document.getElementById('liste').innerHTML = creerHtml(modele)
+}
+
+function creerHtml(modele) {
+ var html =  liste({data: modele.data})
+ return html
+}
+</code></pre>
+
+<h3>
+<a id="transformer-la-vue-avec-browserify" class="anchor" href="#transformer-la-vue-avec-browserify" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Transformer la vue avec browserify</h3>
+
+<p><code>browserify</code> combine les fichiers javascript en un seul fichier qui sera téléchargez avec le fichier HTML. Notre vue <code>liste.handlebars</code> n'étant pas écrite en javascript nous devons utiliser une transformation <code>browserify</code>. C'est la librairie <code>browserify-handlebars</code> que nous avons téléchargée tout à l'heure.</p>
+
+<p>Ouvrez <code>package.json</code> et modifiez le script <code>build</code> en ajoutant <code>-t browserify-handlebars</code> pour qu'il utilise la transformation:</p>
+
+<pre><code>{
+  "name": "handlebars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",
+    "build": "browserify main.js -o public/script.js -t browserify-handlebars | minify public/script.js -o public/script.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
+</code></pre>
+
+<p>Vous pouvez maintenant mettre à jour <code>script.js</code> dans le dossier <code>public</code> en ouvrant un terminal pour lancer le script <code>build</code>.</p>
+
+<pre><code>$ npm run build
+</code></pre>
+
+<p>Ouvrez <code>public/index.html</code> dans le navigateur.</p>
+
+<h2>
+<a id="conclusion" class="anchor" href="#conclusion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conclusion</h2>
+
+<p>Nous avons utilisé un script externe pour un rendu de la vue plus propre. Il existe beaucoup d'alternatives à handlebars que vous pouvez trouver par une simple <a href="https://www.google.fr/#q=template+engine+javascript+frontend">recherche sur internet</a>.</p>
+
+<p>Dans le <a href="link_to_do">prochain chapitre</a> nous allons créer des composants qui englode vue et controleurs.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Tutoriel-fullstack-js-3-handlebars maintained by <a href="https://github.com/idris-maps">idris-maps</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
