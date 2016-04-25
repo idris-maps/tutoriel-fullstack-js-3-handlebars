@@ -1,0 +1,16 @@
+{
+  "name": "3.handlebars",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify main.js -o public/script.js -t browserify-handlebars | minify public/script.js -o public/script.js"
+  },
+  "author": "idris-maps.com",
+  "license": "GPL-2.0",
+  "dependencies": {
+    "browserify-handlebars": "^1.0.0",
+    "handlebars": "^4.0.5"
+  }
+}

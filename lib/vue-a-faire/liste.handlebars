@@ -1,0 +1,35 @@
+{{#each data}}
+<div
+ {{#if fait}} class="liste-element fait"
+ {{else}} class="liste-element a-faire"
+ {{/if}}
+ >
+ <div class="liste-element-info">
+  <div class="liste-element-texte">
+   <p>{{text}}</p>
+  </div>
+  <div class="liste-element-modif">
+   <span class="glyphicon glyphicon-pencil"></span>
+  </div>
+  <div class="liste-element-statut">
+   <span
+    {{#if fait}} class="glyphicon glyphicon-remove"
+    {{else}} class="glyphicon glyphicon-ok"
+    {{/if}}
+   ></span>
+  </div>
+ </div>
+
+ {{#if maj}}
+ <div class="liste-element-maj">
+  <div class="liste-element-maj-input">
+   <input class="form-control" id="liste-element-maj-input" type="text">
+  </div>
+  <div class="liste-element-maj-bouton">
+   <button class="btn btn-primary" id="liste-element-maj-bouton">OK</button>
+  </div>
+ </div>
+ {{/if}}
+
+</div>
+{{/each}}
